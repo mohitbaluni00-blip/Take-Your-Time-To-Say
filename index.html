@@ -2,22 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Will You Be My Valentine?</title>
     <style>
-        body { margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #ffdeef; font-family: sans-serif; overflow: hidden; }
-        .container { text-align: center; padding: 20px; }
-        img { width: 250px; border-radius: 20px; margin-bottom: 20px; }
-        h1 { color: #d63384; }
-        .btn-wrapper { display: flex; justify-content: center; align-items: center; gap: 15px; position: relative; height: 150px; }
-        button { padding: 15px 30px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; }
-        #yesBtn { background-color: #4CAF50; color: white; z-index: 100; }
+        body { 
+            margin: 0; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background-color: #ffdeef; 
+            font-family: sans-serif; 
+            overflow: hidden; /* Prevents scrolling if button moves */
+        }
+        .container { text-align: center; width: 100%; }
+        img { width: 200px; border-radius: 20px; margin-bottom: 20px; }
+        h1 { color: #d63384; font-size: 24px; }
+        .btn-wrapper { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 20px; 
+            margin-top: 20px;
+        }
+        button { 
+            padding: 15px 25px; 
+            font-size: 18px; 
+            border-radius: 10px; 
+            border: none; 
+            cursor: pointer; 
+        }
+        #yesBtn { background-color: #4CAF50; color: white; }
         #noBtn { 
-    background-color: #f44336; 
-    color: white; 
-    position: absolute; 
-    left: 55%; /* This puts it to the right of the center */
-}
+            background-color: #f44336; 
+            color: white; 
+            position: fixed; /* Keeps it relative to the screen, not the box */
+            transition: 0.1s;
+        }
     </style>
 </head>
 <body>
@@ -36,33 +57,39 @@
         const mainText = document.getElementById('main-text');
         const img = document.getElementById('display-image');
 
-        // Logic to move the NO button
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('click', moveButton);
+        // Set initial position of No button
+        window.onload = () => {
+            const rect = noBtn.getBoundingClientRect();
+            noBtn.style.left = rect.left + "px";
+            noBtn.style.top = rect.top + "px";
+        };
 
         function moveButton() {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
+            // Calculate screen boundaries with a 50px safety margin
+            const padding = 50;
+            const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
+
+            // Generate random coordinates within the safe zone
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxWidth));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxHeight));
+
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
         }
+
+        // Move on both hover (PC) and touch (Mobile)
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Stops the click from happening
+            moveButton();
+        });
 
         yesBtn.addEventListener('click', () => {
             mainText.innerHTML = "YAY!!! See you then! ❤️";
             img.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJreWp6ZzR0ZzR0ZzR0ZzR0ZzR0ZzR0ZzR0ZzR0ZzR0ZzR0ZzR0Jm/l41lTfuxV5c490YBG/giphy.gif";
             noBtn.style.display = 'none';
         });
-    </function moveButton() {
-    // This calculates a safe area so the button doesn't go off-screen
-    const padding = 50;
-    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-    
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-    
-    noBtn.style.left = `${x}px`;
-    noBtn.style.top = `${y}px`;
-}>
+    </script>
 </body>
 </html>
